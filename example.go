@@ -2,24 +2,30 @@ package main
 
 import (
 	"fmt"
+	"go/ast"
 	"go/parser"
 	"go/token"
 )
+
+type first struct {
+	a int32
+	b float64
+}
+
+func (f first) doFirst() error {
+	return fmt.Errorf("")
+}
 
 func main() {
 	fset := token.NewFileSet() // positions are relative to fset
 
 	// Parse the file containing this very example
 	// but stop after processing the imports.
-	f, err := parser.ParseFile(fset, "example.go", nil, parser.ImportsOnly)
-	if err != nil {
+	if f, err := parser.ParseFile(fset, "example.go", nil, parser.ImportsOnly); err != nil {
 		fmt.Println(err)
 		return
-	}
-
-	// Print the imports from the file's AST.
-	for _, s := range f.Imports {
-		fmt.Println(s.Path.Value)
+	} else {
+		ast.Print(fset, f)
 	}
 
 }
